@@ -8,6 +8,18 @@
 		<AssemblyVersion>0.0.0.9</AssemblyVersion>
 		<PackageDir Condition="'$(PackageDir)' == ''">$([System.IO.Path]::Combine($(OutputPath),'package'))/</PackageDir>
 		<PackagePath> c:\plugins\LOCAL.zip</PackagePath>
+		<Title>Broadcast Plugin SDK</Title>
+		<Authors>Steven Fawcett</Authors>
+		<Description>Broadcast SDK to help create plugins</Description>
+		<PackageProjectUrl>https://github.com/sfawcett123/BroadcastPluginSDK</PackageProjectUrl>
+		<PackageIcon>airplane.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/sfawcett123/BroadcastPluginSDK</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<NeutralLanguage>en-150</NeutralLanguage>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<Copyright>Copyright © 2025 Steven Fawcett, All Rights Reserved</Copyright>
+		<PackageTags>simulator;broadcast</PackageTags>
 	</PropertyGroup>
 
 <Target Name="Package" DependsOnTargets="Publish">
@@ -19,12 +31,24 @@
 	<Delete Files="$(PackagePath)" />
 </Target>
 
-	<ItemGroup>
-		<ProjectReference Include="..\BroadcastPluginSDK\PluginBase.csproj">
-			<Private>false</Private>
-			<ExcludeAssets>runtime</ExcludeAssets>
-		</ProjectReference>
-	</ItemGroup>
+<ItemGroup>
+  <None Include="..\BroadcastPluginSDK\LICENSE.txt">
+    <Pack>True</Pack>
+    <PackagePath>\</PackagePath>
+  </None>
+  <None Include="..\BroadcastPluginSDK\README.md">
+    <Pack>True</Pack>
+    <PackagePath>\</PackagePath>
+  </None>
+  <None Include="..\BroadcastPluginSDK\Resources\airplane.png">
+    <Pack>True</Pack>
+    <PackagePath>\</PackagePath>
+  </None>
+</ItemGroup>
+
+<ItemGroup>
+  <PackageReference Include="BroadcastPluginSDK" Version="1.0.0" />
+</ItemGroup>
 
 	<ItemGroup>
 	  <Compile Update="CachePage.cs">

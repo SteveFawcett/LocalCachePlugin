@@ -1,4 +1,4 @@
-﻿using PluginBase;
+﻿using BroadcastPluginSDK;
 using System.Drawing;
 using System.Windows.Forms;
 
