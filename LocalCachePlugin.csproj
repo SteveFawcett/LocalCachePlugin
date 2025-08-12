@@ -2,25 +2,24 @@
 
 	<PropertyGroup>
 		<TargetFramework>net8.0-windows8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Platforms>AnyCPU;x86;x64</Platforms>
-		<AssemblyVersion>0.0.0.0</AssemblyVersion>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 		<PackageDir Condition="'$(PackageDir)' == ''">$([System.IO.Path]::Combine($(OutputPath),'package'))/</PackageDir>
 		<OutputDirectory>.</OutputDirectory>
 		<Version>$(Version)</Version>
 		<PackageFileName>$(AssemblyName)-v$(Version).zip</PackageFileName>
 		<PackagePath>$(OutputDirectory)\$(PackageFileName)</PackagePath>
 		<SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
-		<Title>Broadcast Local Cache Plugin</Title>
-		<Authors>Steven Fawcett</Authors>
-		<Description>A local cache for Broadcast</Description>
-		<PackageIcon>airplane.png</PackageIcon>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryType>git</RepositoryType>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<Copyright>Copyright © 2025 Steven Fawcett, All Rights Reserved</Copyright>
 		<PackageTags>simulator;broadcast</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>airplane.png</PackageIcon>
+		<PackageProjectUrl>https://github.com/SteveFawcett/LocalCachePlugin</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/SteveFawcett/LocalCachePlugin</RepositoryUrl>
 	</PropertyGroup>
 
 <Target Name="Package" DependsOnTargets="Publish">
@@ -49,7 +48,7 @@
 </ItemGroup>
 
 <ItemGroup>
-  <PackageReference Include="BroadcastPluginSDK" Version="1.0.1" />
+  <ProjectReference Include="..\BroadcastPluginSDK\BroadcastPluginSDK.csproj" />
 </ItemGroup>
 
 	<ItemGroup>
