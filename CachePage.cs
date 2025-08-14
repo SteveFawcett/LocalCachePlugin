@@ -27,7 +27,10 @@ namespace LocalCachePlugin
         {
             if (listView1.InvokeRequired)
             {
-                listView1.Invoke(new Action(() => redraw( myDict)));
+                if (listView1 != null && listView1.IsHandleCreated && !listView1.IsDisposed)
+                {
+                    listView1.Invoke(new Action(() => redraw(myDict)));
+                }
                 return;
             }
 

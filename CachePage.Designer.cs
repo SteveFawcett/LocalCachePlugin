@@ -38,13 +38,10 @@ namespace LocalCachePlugin
             // 
             listView1.Location = new Point(3, 7);
             listView1.Name = "listView1";
-            listView1.Size = new Size(440, 440);
+            listView1.Size = new Size(440, 349);
             listView1.TabIndex = 1;
             listView1.UseCompatibleStateImageBehavior = false;
             listView1.View = View.Details;
-            listView1.Columns.Clear();
-            listView1.Columns.Add("Key", 250);
-            listView1.Columns.Add("Value", 150);
             // 
             // CachePage
             // 
@@ -52,7 +49,7 @@ namespace LocalCachePlugin
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(listView1);
             Name = "CachePage";
-            Size = new Size(448, 450);
+            Size = new Size(448, 359);
             ResumeLayout(false);
         }
 
