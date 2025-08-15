@@ -6,14 +6,11 @@ namespace LocalCachePlugin
 {
     public partial class CachePage : UserControl 
     {
-        private string? pName;
-        private string? pDescription;
-        private string? pVersion;
-        public Image? Icon
-        {
-            get;set;
-        }
-
+        internal string? pName;
+        internal string? pDescription;
+        internal string? pVersion;
+        internal Image? pIcon;
+        public Image? Icon { get => pIcon; set => pIcon = value; }
         public new string Name { set => pName = value; get => pName ?? string.Empty; }
         public string Version { set => pVersion = value; get => pVersion ?? string.Empty; }
         public string Description { set => pDescription = value; get => pDescription ?? string.Empty; }

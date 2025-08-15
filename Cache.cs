@@ -1,81 +1,92 @@
 ﻿using BroadcastPluginSDK;
-using System.Windows.Forms;
-using System.Diagnostics;
-using Microsoft.Extensions.Configuration;
+using LocalCachePlugin.Properties;
 
-namespace LocalCachePlugin
+namespace LocalCachePlugin;
+
+public class Cache : BroadcastCacheBase
 {
-    internal class InternalCache : PluginData
-    {
+    private static Dictionary<string, string> _internalCache = [];
+    private UserControl _infoPage = new CachePage();
 
+    public Cache()
+    {
+        Master = false;
+        if (_infoPage is CachePage p)
+        {
+            p.pName = "Local Cache";
+            Icon = p.pIcon = Resources.green;
+            p.pDescription = "Simple local cache";
+        }
     }
-    public class Cache : BroadcastPlugin, ICache
+
+    public override UserControl? InfoPage
     {
-        private InternalCache _internalCache = [];
-        public override UserControl? InfoPage { get => _infoPage; set => _infoPage = value ?? throw new NullReferenceException(); }
-        private UserControl _infoPage = new CachePage();
-        public bool Master { get; set; } = false;
-        public override string Stanza => "Local";
+        get => _infoPage;
+        set => _infoPage = value ?? throw new NullReferenceException();
+    }
 
-        public Cache() : base()
+    public override string Stanza => "Local";
+
+    public override void Clear()
+    {
+        _internalCache = [];
+    }
+    
+    public override void Write(Dictionary<string, string> data)
+    {
+        foreach (var kv in data)
         {
-            Name = "Local Cache";
-            Icon = Properties.Resources.green;
-            Description = "Simple local cache";
-
+                _internalCache[kv.Key] = kv.Value;
         }
 
-        public override string Start()
-        {
-            var value = Configuration?["master"];
+        if (_infoPage is CachePage p) p.redraw(_internalCache);
+    }
 
-            if (value != null)
+    public override List<KeyValuePair<string, string>> CacheReader(List<string> values)
+    {
+        if (values.Count == 0) return Read().ToList();
+
+        return Read( values).ToList();
+    }
+
+    public override string Start()
+    {
+        var value = Configuration?["master"];
+
+        if (value != null)
+        {
+            if (bool.TryParse(value, out var result))
             {
-                if (bool.TryParse(value, out var result))
-                {
-                    Master = result;
-                    return($"{Name} plugin marked as Master");
-                }
-                else
-                {
-                    return($"{Name} Invalid boolean value for 'master': {value}");
-                }
+                Master = result;
+                return $"{Name} plugin marked as Master";
             }
-            else
-            {
-                return($"{Name} 'master' key not found in configuration");
-            }
+
+            return $"{Name} Invalid boolean value for 'master': {value}";
         }
 
+        return $"{Name} 'master' key not found in configuration";
+    }
 
-        public void Clear()
+    public static IEnumerable<KeyValuePair<string, string>> Read(List<string> values)
+    {
+        foreach (var value in values)
         {
-            _internalCache = [];
+            yield return ReadValue(value);
         }
+    }
 
-        public IEnumerable<KeyValuePair<string, string>> Read(List<string> values)
+    public static IEnumerable<KeyValuePair<string, string>> Read()
+    {
+        foreach (var kvp in _internalCache )
         {
-            foreach (var value in values)
-            {
-                if (_internalCache.TryGetValue(value, out var data))
-                {
-                    yield return new KeyValuePair<string, string>(value, data);
-                }
-            }
+            yield return new KeyValuePair<string, string>( kvp.Key, kvp.Value );
         }
+    }
 
-        public void Write(PluginData data)
-        {
-            var mergedDict = _internalCache.Concat(data).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            if( mergedDict is InternalCache c)
-            {
-                _internalCache = c;
-            }
-
-            if (_infoPage is CachePage p)
-            {
-                p.redraw( mergedDict );
-            }
-        }
+    public static KeyValuePair<string, string> ReadValue( string value)
+    {
+        if (_internalCache.TryGetValue(value, out var data))
+            return new KeyValuePair<string, string>(value, data);
+        return new KeyValuePair<string, string>(value, string.Empty);
     }
 }
