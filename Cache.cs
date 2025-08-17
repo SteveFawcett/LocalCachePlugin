@@ -7,16 +7,11 @@ public class Cache : BroadcastCacheBase
 {
     private static Dictionary<string, string> _internalCache = [];
     private UserControl _infoPage = new CachePage();
+    private static readonly Image s_icon = Resources.green;
 
-    public Cache()
+    public Cache() : base(null, null, s_icon , "Local Cache", "Local", true, "Simple Cache")
     {
-        Master = false;
-        if (_infoPage is CachePage p)
-        {
-            p.pName = "Local Cache";
-            Icon = p.pIcon = Resources.green;
-            p.pDescription = "Simple local cache";
-        }
+        _internalCache = [];
     }
 
     public override UserControl? InfoPage
