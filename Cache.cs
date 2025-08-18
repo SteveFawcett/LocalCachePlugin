@@ -2,6 +2,7 @@
 using BroadcastPluginSDK.abstracts;
 using LocalCachePlugin.Properties;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace LocalCachePlugin;
 
@@ -10,10 +11,12 @@ public class Cache : BroadcastCacheBase
     private static Dictionary<string, string> _internalCache = [];
     private static readonly CachePage s_infoPage = new();
     private static readonly Image s_icon = Resources.green;
+    private readonly ILogger _logger;
 
-    public Cache(IConfiguration configuration) : base(configuration, s_infoPage, s_icon, "Local Cache", "Local" ,
+    public Cache(IConfiguration configuration , ILogger logger) : base(configuration, s_infoPage, s_icon, "Local Cache", "Local" ,
         "Simple Cache")
     {
+        _logger = logger;
         _internalCache = new Dictionary<string, string>();
     }
 
