@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace LocalCachePlugin
 {
-    public partial class CachePage : UserControl 
+    public partial class CachePage : UserControl , IInfoPage
     {
         internal string? pName;
         internal string? pDescription;
@@ -14,7 +14,10 @@ namespace LocalCachePlugin
         public new string Name { set => pName = value; get => pName ?? string.Empty; }
         public string Version { set => pVersion = value; get => pVersion ?? string.Empty; }
         public string Description { set => pDescription = value; get => pDescription ?? string.Empty; }
-
+        public Control GetControl()
+        {
+            return this;
+        }
         public CachePage()
         {
             InitializeComponent();

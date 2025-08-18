@@ -1,66 +1,51 @@
 ﻿using BroadcastPluginSDK;
 using LocalCachePlugin.Properties;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using System.Diagnostics;
 
 namespace LocalCachePlugin;
 
 public class Cache : BroadcastCacheBase
 {
     private static Dictionary<string, string> _internalCache = [];
-    private UserControl _infoPage = new CachePage();
+    private static readonly CachePage s_infoPage = new CachePage();
     private static readonly Image s_icon = Resources.green;
 
-    public Cache() : base(null, null, s_icon , "Local Cache", "Local", true, "Simple Cache")
+    public Cache(IConfiguration configuration) : base(null, s_infoPage, s_icon, "Local Cache", "Local", true, "Simple Cache")
     {
-        _internalCache = [];
+        _internalCache = new Dictionary<string, string>();
+
+        var config = configuration.GetSection("Local").GetChildren();
+
+        // Fix for CS0021: Use LINQ to find the "Master" configuration section
+        var masterSection = config.FirstOrDefault(section => section.Key == "Master");
+        Master = masterSection != null && bool.TryParse(masterSection.Value, out var masterValue) && masterValue;
     }
 
-    public override UserControl? InfoPage
-    {
-        get => _infoPage;
-        set => _infoPage = value ?? throw new NullReferenceException();
-    }
-
-    public override string Stanza => "Local";
 
     public override void Clear()
     {
         _internalCache = [];
     }
-    
+
     public override void Write(Dictionary<string, string> data)
     {
         foreach (var kv in data)
         {
-                _internalCache[kv.Key] = kv.Value;
+            _internalCache[kv.Key] = kv.Value;
         }
 
-        if (_infoPage is CachePage p) p.redraw(_internalCache);
+        s_infoPage.redraw(_internalCache);
     }
 
     public override List<KeyValuePair<string, string>> CacheReader(List<string> values)
     {
         if (values.Count == 0) return Read().ToList();
 
-        return Read( values).ToList();
+        return Read(values).ToList();
     }
 
-    public override string Start()
-    {
-        var value = Configuration?["master"];
-
-        if (value != null)
-        {
-            if (bool.TryParse(value, out var result))
-            {
-                Master = result;
-                return $"{Name} plugin marked as Master";
-            }
-
-            return $"{Name} Invalid boolean value for 'master': {value}";
-        }
-
-        return $"{Name} 'master' key not found in configuration";
-    }
 
     public static IEnumerable<KeyValuePair<string, string>> Read(List<string> values)
     {
@@ -72,13 +57,12 @@ public class Cache : BroadcastCacheBase
 
     public static IEnumerable<KeyValuePair<string, string>> Read()
     {
-        foreach (var kvp in _internalCache )
+        foreach (var kvp in _internalCache)
         {
-            yield return new KeyValuePair<string, string>( kvp.Key, kvp.Value );
+            yield return new KeyValuePair<string, string>(kvp.Key, kvp.Value);
         }
     }
-
-    public static KeyValuePair<string, string> ReadValue( string value)
+    public static KeyValuePair<string, string> ReadValue(string value)
     {
         if (_internalCache.TryGetValue(value, out var data))
             return new KeyValuePair<string, string>(value, data);
