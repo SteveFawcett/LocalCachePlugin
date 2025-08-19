@@ -1,23 +1,29 @@
-﻿using System.Diagnostics;
-using BroadcastPluginSDK.abstracts;
+﻿using BroadcastPluginSDK.abstracts;
+using BroadcastPluginSDK.Interfaces;
 using LocalCachePlugin.Properties;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace LocalCachePlugin;
 
 public class Cache : BroadcastCacheBase
 {
+    private const string PluginName = "LocalCachePlugin";
+    private const string PluginDescription = "Local Cache PluginBase.";
+    private const string Stanza = "Local";
+
     private static Dictionary<string, string> _internalCache = [];
     private static readonly CachePage s_infoPage = new();
     private static readonly Image s_icon = Resources.green;
-    private readonly ILogger _logger;
+    private ILogger<IPlugin> _logger;
 
-    public Cache(IConfiguration configuration , ILogger logger) : base(configuration, s_infoPage, s_icon, "Local Cache", "Local" ,
-        "Simple Cache")
+    public Cache(IConfiguration configuration , ILogger<IPlugin> logger) :
+        base(configuration, s_infoPage, s_icon, PluginName, Stanza , PluginDescription)
     {
         _logger = logger;
         _internalCache = new Dictionary<string, string>();
+        _logger.LogInformation(PluginDescription);
     }
 
     public override void Clear()
