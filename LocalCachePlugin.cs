@@ -11,27 +11,17 @@ public class LocalCachePlugin : BroadcastCacheBase
 {
     private const string Stanza = "Local";
 
-    private static ConcurrentDictionary<string, string> _internalCache = new();
+    private static Dictionary<string, string> _internalCache = new();
     private static readonly CachePage s_infoPage = new();
     private static readonly Image s_icon = Resources.green;
     private ILogger<IPlugin> _logger;
+    private object _cacheLock = new object();
 
     public LocalCachePlugin(IConfiguration configuration , ILogger<IPlugin> logger) :
         base(configuration, s_infoPage, s_icon,  Stanza )
     {
         _logger = logger;
         
-    }
-
-    public override void Clear()
-    {
-        _internalCache = [];
-    }
-
-    public override void Write(Dictionary<string, string> data)
-    {
-        foreach (var kv in data) _internalCache[kv.Key] = kv.Value;
-        // Removed reassignment of _internalCache to avoid thread-safety issues.
     }
 
     public override void Clear()
