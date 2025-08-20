@@ -20,7 +20,7 @@ public class LocalCachePlugin : BroadcastCacheBase
         base(configuration, s_infoPage, s_icon,  Stanza )
     {
         _logger = logger;
-        _internalCache = new Dictionary<string, string>();
+        
     }
 
     public override void Clear()
