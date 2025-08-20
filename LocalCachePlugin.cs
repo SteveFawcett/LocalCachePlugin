@@ -7,10 +7,8 @@ using System.Diagnostics;
 
 namespace LocalCachePlugin;
 
-public class Cache : BroadcastCacheBase
+public class LocalCachePlugin : BroadcastCacheBase
 {
-    private const string PluginName = "LocalCachePlugin";
-    private const string PluginDescription = "Local Cache PluginBase.";
     private const string Stanza = "Local";
 
     private static Dictionary<string, string> _internalCache = [];
@@ -18,12 +16,11 @@ public class Cache : BroadcastCacheBase
     private static readonly Image s_icon = Resources.green;
     private ILogger<IPlugin> _logger;
 
-    public Cache(IConfiguration configuration , ILogger<IPlugin> logger) :
-        base(configuration, s_infoPage, s_icon, PluginName, Stanza , PluginDescription)
+    public LocalCachePlugin(IConfiguration configuration , ILogger<IPlugin> logger) :
+        base(configuration, s_infoPage, s_icon,  Stanza )
     {
         _logger = logger;
         _internalCache = new Dictionary<string, string>();
-        _logger.LogInformation(PluginDescription);
     }
 
     public override void Clear()
