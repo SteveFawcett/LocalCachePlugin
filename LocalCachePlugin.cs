@@ -11,7 +11,7 @@ public class LocalCachePlugin : BroadcastCacheBase
 {
     private const string Stanza = "Local";
 
-    private static Dictionary<string, string> _internalCache = [];
+    private static ConcurrentDictionary<string, string> _internalCache = new();
     private static readonly CachePage s_infoPage = new();
     private static readonly Image s_icon = Resources.green;
     private ILogger<IPlugin> _logger;
