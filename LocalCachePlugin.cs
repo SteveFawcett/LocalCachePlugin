@@ -31,7 +31,23 @@ public class LocalCachePlugin : BroadcastCacheBase
     public override void Write(Dictionary<string, string> data)
     {
         foreach (var kv in data) _internalCache[kv.Key] = kv.Value;
+        // Removed reassignment of _internalCache to avoid thread-safety issues.
+    }
 
+    public override void Clear()
+    {
+        lock (_cacheLock)
+        {
+            _internalCache.Clear();
+        }
+    }
+
+    public override void Write(Dictionary<string, string> data)
+    {
+        lock (_cacheLock)
+        {
+            foreach (var kv in data) _internalCache[kv.Key] = kv.Value;
+        }
         s_infoPage.redraw(_internalCache);
     }
 
