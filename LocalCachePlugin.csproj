@@ -32,10 +32,6 @@
 </Target>
 
 <ItemGroup>
-  <None Include="..\BroadcastPluginSDK\LICENSE.txt">
-    <Pack>True</Pack>
-    <PackagePath>\</PackagePath>
-  </None>
   <None Include="..\BroadcastPluginSDK\README.md">
     <Pack>True</Pack>
     <PackagePath>\</PackagePath>
@@ -75,6 +71,13 @@
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="LICENSE.txt">
+	    <PackagePath>\</PackagePath>
+	    <Pack>True</Pack>
+	  </None>
 	</ItemGroup>
 
 </Project>
