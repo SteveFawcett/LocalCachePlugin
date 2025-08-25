@@ -22,7 +22,11 @@
 		<RepositoryUrl>https://github.com/SteveFawcett/LocalCachePlugin</RepositoryUrl>
 	</PropertyGroup>
 
-
+	<Target Name="Package" DependsOnTargets="Publish">
+		<MakeDir Directories="$(PackageDir)" />
+		<ZipDirectory Overwrite="true" SourceDirectory="$(MSBuildProjectDirectory)/$(PublishDir)" DestinationFile="$(PackagePath)" />
+	</Target>
+	
 	<Target Name="AutoPackage" AfterTargets="Publish">
 		<Message Importance="High" Text="📦 Packaging plugin to $(PackagePath)" />
 		<MakeDir Directories="$(PackageDir)" />
