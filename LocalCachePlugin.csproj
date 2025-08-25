@@ -22,15 +22,16 @@
 		<RepositoryUrl>https://github.com/SteveFawcett/LocalCachePlugin</RepositoryUrl>
 	</PropertyGroup>
 
-<Target Name="Package" DependsOnTargets="Publish">
-	<MakeDir Directories="$(PackageDir)" />
-	<ZipDirectory Overwrite="true" SourceDirectory="$(MSBuildProjectDirectory)/$(PublishDir)" DestinationFile="$(PackagePath)" />
-</Target>
 
-<Target Name="PackageClean" AfterTargets="Clean">
-	<Delete Files="$(PackagePath)" />
-</Target>
-
+	<Target Name="AutoPackage" AfterTargets="Publish">
+		<Message Importance="High" Text="📦 Packaging plugin to $(PackagePath)" />
+		<MakeDir Directories="$(PackageDir)" />
+		<ZipDirectory Overwrite="true" SourceDirectory="$(MSBuildProjectDirectory)/$(PublishDir)" DestinationFile="$(PackagePath)" />
+		<Copy SourceFiles="$(PackagePath)" DestinationFolder="$(MSBuildProjectDirectory)/$(PublishDir)" Condition="'$(Configuration)' == 'Debug'" />
+		<Copy SourceFiles="$(PackagePath)" DestinationFolder="$(AppData)/Broadcast/Plugins" Condition="'$(Configuration)' == 'Debug'" />
+		<Message Importance="High" Text="📦 Copying package $(AppData)/Broadcast/Plugins" Condition="'$(Configuration)' == 'Debug'" />
+	</Target>
+	
 <ItemGroup>
   <None Include="..\BroadcastPluginSDK\README.md">
     <Pack>True</Pack>
@@ -48,7 +49,7 @@
 </ItemGroup>
 
 <ItemGroup Condition="'$(Configuration)' == 'Release'">
-	<PackageReference Include="BroadcastPluginSDK" Version="1.0.6" />
+	<PackageReference Include="BroadcastPluginSDK" Version="1.0.17" />
 </ItemGroup>
 
 <ItemGroup>
