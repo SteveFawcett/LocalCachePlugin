@@ -3,13 +3,12 @@ using BroadcastPluginSDK.Interfaces;
 using LocalCachePlugin.Properties;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 
 namespace LocalCachePlugin;
 
 public class LocalCachePlugin : BroadcastCacheBase
 {
-    private const string Stanza = "Local";
+    private const string STANZA = "Local";
 
     private static Dictionary<string, string> _internalCache = new();
     private static readonly CachePage s_infoPage = new();
@@ -18,7 +17,7 @@ public class LocalCachePlugin : BroadcastCacheBase
     private object _cacheLock = new object();
 
     public LocalCachePlugin(IConfiguration configuration , ILogger<IPlugin> logger) :
-        base(configuration, s_infoPage, s_icon,  Stanza )
+        base(configuration, s_infoPage, s_icon,  STANZA )
     {
         _logger = logger;
         

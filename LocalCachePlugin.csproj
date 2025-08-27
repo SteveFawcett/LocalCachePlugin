@@ -6,11 +6,14 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-		<PackageDir Condition="'$(PackageDir)' == ''">$([System.IO.Path]::Combine($(OutputPath),'package'))/</PackageDir>
-		<OutputDirectory>.</OutputDirectory>
-		<AssemblyVersion>0.0.0</AssemblyVersion>
+
+		<OutputDirectory>$(AppData)\Broadcast\Plugins\</OutputDirectory>
+		<PackageDir Condition="'$(PackageDir)' == ''">$([System.IO.Path]::Combine($(OutputDirectory),''))/</PackageDir>
 		<PackageFileName>$(AssemblyName)-v$(AssemblyVersion).zip</PackageFileName>
-		<PackagePath>$(OutputDirectory)\$(PackageFileName)</PackagePath>
+		<PackagePath>$(PackageDir)\$(PackageFileName)</PackagePath>
+		
+		<AssemblyVersion>0.0.0</AssemblyVersion>
+		
 		<SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>
 		<RepositoryType>git</RepositoryType>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -22,18 +25,24 @@
 		<RepositoryUrl>https://github.com/SteveFawcett/LocalCachePlugin</RepositoryUrl>
 	</PropertyGroup>
 
-	<Target Name="Package" DependsOnTargets="Publish">
-		<MakeDir Directories="$(PackageDir)" />
-		<ZipDirectory Overwrite="true" SourceDirectory="$(MSBuildProjectDirectory)/$(PublishDir)" DestinationFile="$(PackagePath)" />
-	</Target>
-	
 	<Target Name="AutoPackage" AfterTargets="Publish">
 		<Message Importance="High" Text="📦 Packaging plugin to $(PackagePath)" />
 		<MakeDir Directories="$(PackageDir)" />
 		<ZipDirectory Overwrite="true" SourceDirectory="$(MSBuildProjectDirectory)/$(PublishDir)" DestinationFile="$(PackagePath)" />
-		<Copy SourceFiles="$(PackagePath)" DestinationFolder="$(MSBuildProjectDirectory)/$(PublishDir)" Condition="'$(Configuration)' == 'Debug'" />
+
+		<Message Importance="High" Text="📦 Copying package from $(PackagePath) To $(MSBuildProjectDirectory)/$(PublishDir) " />
+		<Copy SourceFiles="$(PackagePath)" DestinationFolder="$(MSBuildProjectDirectory)/$(PublishDir)" />
+
 		<Copy SourceFiles="$(PackagePath)" DestinationFolder="$(AppData)/Broadcast/Plugins" Condition="'$(Configuration)' == 'Debug'" />
 		<Message Importance="High" Text="📦 Copying package $(AppData)/Broadcast/Plugins" Condition="'$(Configuration)' == 'Debug'" />
+
+		<ItemGroup>
+			<DynamicContent Include="$(PackagePath)">
+				<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+				<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+			</DynamicContent>
+		</ItemGroup>
+
 	</Target>
 	
 <ItemGroup>
@@ -53,7 +62,7 @@
 </ItemGroup>
 
 <ItemGroup Condition="'$(Configuration)' == 'Release'">
-	<PackageReference Include="BroadcastPluginSDK" Version="1.0.17" />
+	<PackageReference Include="BroadcastPluginSDK" Version="1.1.1" />
 </ItemGroup>
 
 <ItemGroup>
