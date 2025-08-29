@@ -16,6 +16,8 @@ public class LocalCachePlugin : BroadcastCacheBase
     private ILogger<IPlugin> _logger;
     private object _cacheLock = new object();
 
+    public LocalCachePlugin() : base() { }
+
     public LocalCachePlugin(IConfiguration configuration , ILogger<IPlugin> logger) :
         base(configuration, s_infoPage, s_icon,  STANZA )
     {
