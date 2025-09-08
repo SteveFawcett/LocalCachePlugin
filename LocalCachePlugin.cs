@@ -13,7 +13,7 @@ public class LocalCachePlugin : BroadcastCacheBase
     private static Dictionary<string, string> _internalCache = new();
     private static readonly CachePage s_infoPage = new();
     private static readonly Image s_icon = Resources.green;
-    private ILogger<IPlugin> _logger;
+    private ILogger<IPlugin>? _logger;
     private object _cacheLock = new object();
 
     public LocalCachePlugin() : base() { }
@@ -33,6 +33,8 @@ public class LocalCachePlugin : BroadcastCacheBase
         }
     }
 
+    public override void CommandWriter(Dictionary<string, string> data) => CacheWriter(data);
+
     public override void CacheWriter(Dictionary<string, string> data)
     {
         lock (_cacheLock)
@@ -42,6 +44,7 @@ public class LocalCachePlugin : BroadcastCacheBase
         s_infoPage.redraw(_internalCache);
     }
 
+    public override List<KeyValuePair<string, string>> CommandReader(List<string> values) => CacheReader(values);
     public override List<KeyValuePair<string, string>> CacheReader(List<string> values)
     {
         if (values.Count == 0) return Read().ToList();
