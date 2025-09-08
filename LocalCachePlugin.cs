@@ -33,7 +33,7 @@ public class LocalCachePlugin : BroadcastCacheBase
         }
     }
 
-    public override void Write(Dictionary<string, string> data)
+    public override void CacheWriter(Dictionary<string, string> data)
     {
         lock (_cacheLock)
         {
