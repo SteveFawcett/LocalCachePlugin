@@ -39,7 +39,7 @@
 
 	</Target>
 
-	<Target Name="Deliver" AfterTargets="Publish">
+	<Target Name="Deliver">
 		<Message Importance="High" Text="📦 Copying to remote [$(RemotePath)] " />
 		<Copy SourceFiles="$(PackagePath)" DestinationFolder="$(RemotePath)" />
 	</Target>

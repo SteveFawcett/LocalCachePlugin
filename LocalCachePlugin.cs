@@ -1,4 +1,5 @@
 ﻿using BroadcastPluginSDK.abstracts;
+using BroadcastPluginSDK.Classes;
 using BroadcastPluginSDK.Interfaces;
 using LocalCachePlugin.Properties;
 using Microsoft.Extensions.Configuration;
@@ -32,9 +33,6 @@ public class LocalCachePlugin : BroadcastCacheBase
             _internalCache.Clear();
         }
     }
-
-    public override void CommandWriter(Dictionary<string, string> data) => CacheWriter(data);
-
     public override void CacheWriter(Dictionary<string, string> data)
     {
         lock (_cacheLock)
@@ -44,7 +42,6 @@ public class LocalCachePlugin : BroadcastCacheBase
         s_infoPage.redraw(_internalCache);
     }
 
-    public override List<KeyValuePair<string, string>> CommandReader(List<string> values) => CacheReader(values);
     public override List<KeyValuePair<string, string>> CacheReader(List<string> values)
     {
         if (values.Count == 0) return Read().ToList();
@@ -67,5 +64,16 @@ public class LocalCachePlugin : BroadcastCacheBase
         if (_internalCache.TryGetValue(value, out var data))
             return new KeyValuePair<string, string>(value, data);
         return new KeyValuePair<string, string>(value, string.Empty);
+    }
+
+    public override IEnumerable<CommandItem> CommandReader(CommandStatus status)
+    {
+        _logger?.LogWarning("CommandReader not implemented");
+        return Array.Empty<CommandItem>();
+    }
+
+    public override void CommandWriter(CommandItem data)
+    {
+        _logger?.LogWarning("CommandWriter not implemented");
     }
 }
